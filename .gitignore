@@ -1,0 +1,20 @@
+# Rasa
+.rasa/
+models/*.tar.gz
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Configuración local
+.env
