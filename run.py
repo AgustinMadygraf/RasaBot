@@ -6,6 +6,7 @@ import os
 import logging
 import asyncio
 from pathlib import Path
+import sys
 from telegram.ext import Updater, MessageHandler, Filters
 from rasa.core.agent import Agent
 from dotenv import load_dotenv
@@ -15,14 +16,19 @@ logging.basicConfig(level=logging.INFO)
 
 BASE_DIR = Path(__file__).resolve().parent
 model_path = os.getenv("MODEL_PATH")
-TG_TOKEN   = os.getenv("TG_TOKEN")
-if not model_path:
+if not model_path or not os.path.isfile(model_path):
+    print(f"[ERROR] Modelo no encontrado. MODEL_PATH='{model_path}'", file=sys.stderr)
     models_dir = BASE_DIR / "models"
     candidates = sorted(models_dir.glob("*.tar.gz"), key=lambda p: p.stat().st_mtime, reverse=True)
     model_path = str(candidates[0]) if candidates else None
+print(f"Modelo encontrado: {model_path}")
+TG_TOKEN = os.getenv("TG_TOKEN")
 
-if not model_path:
-    raise RuntimeError("No se encontró MODEL_PATH ni modelos en ./models/*.tar.gz")
+if not TG_TOKEN:
+    print(f"[ERROR] Token de Telegram no encontrado. TG_TOKEN='{TG_TOKEN}'", file=sys.stderr)
+    sys.exit(1)
+
+print(f"Token de Telegram: {TG_TOKEN}")
 
 logging.info("Usando modelo: %s", model_path)
 agent = Agent.load(model_path)
