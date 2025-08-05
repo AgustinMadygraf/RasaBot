@@ -1,6 +1,6 @@
 # Rasa
 .rasa/
-models/*.tar.gz
+
 
 # Python
 .venv/
