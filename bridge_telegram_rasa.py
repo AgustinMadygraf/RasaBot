@@ -8,9 +8,13 @@ import requests
 from telegram.ext import Updater, MessageHandler, Filters
 
 TELEGRAM_TOKEN = os.getenv("TG_TOKEN")
-print ("Token:", TELEGRAM_TOKEN)
-RASA_REST_URL = os.getenv("RASA_URL")
-print ("Rasa URL:", RASA_REST_URL)
+if not TELEGRAM_TOKEN:
+    raise ValueError("La variable de entorno TG_TOKEN no está definida.")
+
+RASA_REST_URL = os.getenv("RASA_REST_URL")
+if not RASA_REST_URL:
+    raise ValueError("La variable de entorno RASA_REST_URL no está definida.")
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
