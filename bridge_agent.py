@@ -5,16 +5,27 @@ Path: bridge_agent.py
 import os
 import logging
 import asyncio
+from pathlib import Path
 from telegram.ext import Updater, MessageHandler, Filters
 from rasa.core.agent import Agent
 
 logging.basicConfig(level=logging.INFO)
 
-MODEL_PATH = os.getenv("MODEL_PATH")
+BASE_DIR = Path(__file__).resolve().parent
+model_path = os.getenv("MODEL_PATH")
 TG_TOKEN   = os.getenv("TG_TOKEN")
+if not model_path:
+    models_dir = BASE_DIR / "models"
+    candidates = sorted(models_dir.glob("*.tar.gz"), key=lambda p: p.stat().st_mtime, reverse=True)
+    model_path = str(candidates[0]) if candidates else None
+
+if not model_path:
+    raise RuntimeError("No se encontró MODEL_PATH ni modelos en ./models/*.tar.gz")
+
+logging.info("Usando modelo: %s", model_path)
+agent = Agent.load(model_path)
 
 loop = asyncio.get_event_loop()
-agent = Agent.load(MODEL_PATH)
 
 def handle_message(update, context):
     " Maneja los mensajes de texto del usuario y los envía a Rasa"
