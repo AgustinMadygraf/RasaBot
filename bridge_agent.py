@@ -14,7 +14,7 @@ MODEL_PATH = os.getenv("MODEL_PATH")
 TG_TOKEN   = os.getenv("TG_TOKEN")
 
 loop = asyncio.get_event_loop()
-agent = loop.run_until_complete(Agent.load(MODEL_PATH))
+agent = Agent.load(MODEL_PATH)
 
 def handle_message(update, context):
     " Maneja los mensajes de texto del usuario y los envía a Rasa"
