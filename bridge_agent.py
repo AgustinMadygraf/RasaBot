@@ -8,6 +8,8 @@ import asyncio
 from pathlib import Path
 from telegram.ext import Updater, MessageHandler, Filters
 from rasa.core.agent import Agent
+from dotenv import load_dotenv
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
